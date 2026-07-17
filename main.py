@@ -20,6 +20,11 @@ tasks = [
     }
 ]
 
+def findtask(id):
+    for i in tasks:
+        if i["id"] == id:
+            return i
+
 @app.get("/")
 def hello():
     return {"message":"Hello Server"}
@@ -41,3 +46,8 @@ def health():
 @app.get("/tasks")
 def task():
     return {"data":tasks}
+
+@app.get("/tasks/{id}")
+def taskById(id):
+    task = findtask(int(id))
+    return {"data":task}
