@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,Response,status,Body
 
 app = FastAPI()
 
@@ -26,10 +26,6 @@ def findtask(id):
             return i
 
 @app.get("/")
-def hello():
-    return {"message":"Hello Server"}
-
-@app.get("/")
 def root():
     return {
         "name":"Task API",
@@ -39,15 +35,43 @@ def root():
         ]
     }
 
+
+@app.get("/hello")
+def hello():
+    return {"message":"Hello Server"}
+
 @app.get("/health")
 def health():
     return {"status":"ok"}
 
 @app.get("/tasks")
-def task():
+def get_task():
     return {"data":tasks}
 
 @app.get("/tasks/{id}")
-def taskById(id):
-    task = findtask(int(id))
+def get_task_By_Id(id:int,response:Response):
+    task = findtask(id)
+    if not task:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"error":f"Task {id} not found"}
     return {"data":task}
+
+@app.post("/tasks", status_code=status.HTTP_201_CREATED)
+def create_task(task: dict = Body(...)):
+    
+    if "title" not in task or task["title"].strip() == "":
+        return Response(
+            content='{"error":"Title is required"}',
+            media_type="application/json",
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+
+    new_task = {
+        "id": tasks[-1]["id"] + 1,
+        "title": task["title"],
+        "done": False
+    }
+
+    tasks.append(new_task)
+
+    return {"data": new_task}
