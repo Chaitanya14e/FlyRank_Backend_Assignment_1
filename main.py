@@ -24,6 +24,11 @@ def findtask(id):
     for i in tasks:
         if i["id"] == id:
             return i
+        
+def find_task_index(id):
+    for index, task in enumerate(tasks):
+        if task["id"] == id:
+            return index
 
 @app.get("/")
 def root():
@@ -34,11 +39,6 @@ def root():
             "/tasks"
         ]
     }
-
-
-@app.get("/hello")
-def hello():
-    return {"message":"Hello Server"}
 
 @app.get("/health")
 def health():
@@ -75,3 +75,36 @@ def create_task(task: dict = Body(...)):
     tasks.append(new_task)
 
     return {"data": new_task}
+
+@app.put("/tasks/{id}")
+def update_task(id: int, response: Response,updated_task: dict = Body(...)):
+
+    task = findtask(id)
+
+    if not task:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"error": f"Task {id} not found"}
+
+    if "title" not in updated_task or updated_task["title"].strip() == "":
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"error": "Title is required"}
+
+    task["title"] = updated_task["title"]
+
+    if "done" in updated_task:
+        task["done"] = updated_task["done"]
+
+    return {"data": task}
+
+@app.delete("/tasks/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_task(id: int, response: Response):
+
+    index = find_task_index(id)
+
+    if index is None:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"error": f"Task {id} not found"}
+
+    tasks.pop(index)
+
+    return 
