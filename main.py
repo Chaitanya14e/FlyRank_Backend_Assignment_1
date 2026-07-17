@@ -2,10 +2,42 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
+tasks = [
+    {
+        "id":1,
+        "title":"Learning FastAPI",
+        "done":True
+    },
+    {
+        "id":2,
+        "title":"Doing Leetcode problems",
+        "done":True
+    },
+    {
+        "id":3,
+        "title":"Notes Making",
+        "done":False
+    }
+]
+
 @app.get("/")
 def hello():
     return {"message":"Hello Server"}
 
-@app.get("/about")
-def about():
-    return {"message":"This is About Page"}
+@app.get("/")
+def root():
+    return {
+        "name":"Task API",
+        "version":"1.0",
+        "endpoints":[
+            "/tasks"
+        ]
+    }
+
+@app.get("/health")
+def health():
+    return {"status":"ok"}
+
+@app.get("/tasks")
+def task():
+    return {"data":tasks}
