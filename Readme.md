@@ -22,6 +22,6 @@ uvicorn main:app --reload
 | PUT | /tasks/{id} |
 | DELETE | /tasks/{id} |
 
-## Swagger UI
+## Swagger UI Screenshot
 
 ![Swagger UI](screenshots/swagger.png)
