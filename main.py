@@ -83,7 +83,7 @@ def update_task(id: int, response: Response,updated_task: dict = Body(...)):
 
     if not task:
         response.status_code = status.HTTP_404_NOT_FOUND
-        return {"error": f"Task {id} not found"}
+        return {"error": f"Task with id {id} not found"}
 
     if "title" not in updated_task or updated_task["title"].strip() == "":
         response.status_code = status.HTTP_400_BAD_REQUEST
