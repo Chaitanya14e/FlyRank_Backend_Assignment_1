@@ -28,7 +28,8 @@ uvicorn main:app --reload
 curl -i http://127.0.0.1:8000/tasks
 ```
 Output:
-```HTTP/1.1 200 OK
+```
+HTTP/1.1 200 OK
 date: Sat, 18 Jul 2026 05:35:57 GMT
 server: uvicorn
 content-length: 158
